@@ -1,0 +1,239 @@
+# 🧵 テックパック用語リスト（分類付き・基礎300語）
+
+以下は、アパレル製品のテックパック作成において頻繁に使用される基礎用語を約300語、分類ごとに整理したリストです。
+
+---
+
+## 📦 パーツ名・構成部位（約100語）
+
+### 上身頃
+
+* Front Body
+* Back Body
+* Yoke
+* Shoulder
+* Armhole
+* Neckline
+* Side Panel
+* Chest Panel
+
+### 襟まわり
+
+* Collar
+* Stand Collar
+* Shirt Collar
+* Band Collar
+* Lapel
+* Facing
+* Collar Stay
+
+### 袖まわり
+
+* Sleeve
+* Set-in Sleeve
+* Raglan Sleeve
+* Kimono Sleeve
+* Sleeve Cap
+* Cuff
+* Placket
+* Sleeve Opening
+* Tab
+
+### 下身頃
+
+* Skirt Panel
+* Pants Front
+* Pants Back
+* Fly
+* Inseam
+* Outseam
+* Rise
+* Hip Panel
+
+### 裾・ウエスト・ベルト
+
+* Hem
+* Hem Panel
+* Waistband
+* Belt Loop
+* Waist Panel
+* Yoke Seam
+* Slit
+* Kick Pleat
+
+### ポケット関連
+
+* Pocket
+* Patch Pocket
+* Welt Pocket
+* Flap Pocket
+* Side Pocket
+* Coin Pocket
+* Inner Pocket
+
+---
+
+## 🪡 縫製仕様・始末処理（約70語）
+
+### 一般的な縫製
+
+* Topstitch
+* Edge Stitch
+* Understitch
+* Stay Stitch
+* Seam Allowance
+* Stitch Line
+
+### 始末方法
+
+* Overlock
+* Double Turned Hem
+* Blind Hem
+* Bias Binding
+* French Seam
+* Flat-felled Seam
+* Clean Finish
+* Roll Hem
+* Lock Stitch
+* Zigzag Stitch
+* Bar Tack
+
+### 特殊処理
+
+* Shirring
+* Gathering
+* Pleat
+* Tuck
+* Dart
+* Panel Seam
+* Godet
+* Gores
+* Inverted Pleat
+* Knife Pleat
+
+---
+
+## 🔩 開き仕様・副資材・付属（約50語）
+
+### ファスナー・ボタン
+
+* Zipper
+* Invisible Zipper
+* Exposed Zipper
+* Coil Zipper
+* Button
+* Buttonhole
+* Snap
+* Hook & Eye
+* Velcro
+* Eyelet
+
+### その他の付属
+
+* Elastic Band
+* Drawcord
+* Toggle
+* Cord Stopper
+* Tape
+* Interlining
+* Fusible
+* Shoulder Pad
+* Boning
+* Stay Tape
+
+---
+
+## 📏 パターン寸法・展開用語（約50語）
+
+### 寸法部位
+
+* Waist Width
+* Hip Width
+* Bust Width
+* Shoulder Width
+* Neck Drop
+* Armhole Depth
+* Front Rise
+* Back Rise
+* Inseam Length
+* Outseam Length
+* Total Length
+* Sleeve Length
+* Cuff Width
+* Hem Width
+* Bottom Opening
+
+### 展開・指示用語
+
+* Center Front (CF)
+* Center Back (CB)
+* Grainline
+* On Fold
+* Notch
+* Dart Position
+* Seam Position
+* Label Position
+* Balance Mark
+* Placement Line
+* Drill Hole
+
+---
+
+## 🧶 素材・裏地・芯地用語（約30語）
+
+### 表地・裏地・芯
+
+* Shell Fabric
+* Lining Fabric
+* Interlining
+* Fusible Interfacing
+* Non-fusible Interfacing
+* Bias Tape
+* Binding Tape
+* Piping
+* Facing
+* Tricot Lining
+* Cupro
+* Chiffon Lining
+
+### 素材特性・補助
+
+* Stretch
+* Sheer
+* Weight
+* Drape
+* Recovery
+* Handfeel
+* Transparency
+* Breathability
+
+---
+
+## 🌐 汎用語・略語・その他（約20語）
+
+* POH (Point of Hips)
+* HPS (High Point Shoulder)
+* B/L (Bust Line)
+* W/L (Waist Line)
+* CBL (Center Back Length)
+* CB Neck
+* CF Neck
+* CB Zipper
+* OS (One Size)
+* F/B (Front/Back)
+* TBC (To Be Confirmed)
+* Sample Size
+* Base Size
+* Fit Sample
+* PP Sample
+* Size Spec
+* BOM (Bill of Materials)
+* PLM (Product Lifecycle Management)
+
+---
+
+## ✅ 合計語数：約320語
+
+これらの用語をベースに、製品種別ごとにテンプレートを構築することが可能です。また、LangChainやMCPで使う場合には、定義やカテゴリと一緒に構造化すると効果的です。
+
+ご希望があれば、CSV形式やJSON形式、PostgreSQLテーブル定義への変換も対応できます。

@@ -1,0 +1,22 @@
+| No. | ページタイトル                                | 内容概要                              |
+| --- | -------------------------------------- | --------------------------------- |
+| 1   | **Cover Page / Style Summary**         | スタイル名、シーズン、ブランド、デザイナー、連絡先、リビジョン履歴 |
+| 2   | **Technical Flat Sketch – Front**      | フロントの平面図、注釈付き                     |
+| 3   | **Technical Flat Sketch – Back**       | バックの平面図、注釈付き                      |
+| 4   | **Technical Details / Close-ups**      | 特殊な縫製・部品の拡大図                      |
+| 5   | **Bill of Materials (BOM)**            | 生地・副資材・パーツ一覧と仕様番号・カラーコード          |
+| 6   | **Colorway Page**                      | カラー展開、各色の品番とサンプルイメージ              |
+| 7   | **Label & Tag Placement**              | ブランドネーム、品質表示、サイズラベルの位置と種類         |
+| 8   | **Artwork / Print Placement**          | プリント・刺繍の位置とサイズ指定                  |
+| 9   | **Measurement Spec Sheet (Base Size)** | 基準サイズの各部位寸法と許容範囲                  |
+| 10  | **Measurement Spec Sheet (Graded)**    | サイズグレーディング表（XS〜XLなど）              |
+| 11  | **Construction Details**               | 縫い仕様（ステッチ幅、ロック／カバーステッチ等）          |
+| 12  | **Trims / Accessories Details**        | ボタン、ジッパー、リベットなどの写真・仕様             |
+| 13  | **Packing Instructions**               | 畳み方、袋詰め、梱包箱サイズなど                  |
+| 14  | **Hangtag & Barcode Info**             | 値札、バーコード、添付方法                     |
+| 15  | **Wash Care Instructions**             | 洗濯表示、ラベル図                         |
+| 16  | **Fit Comments / Proto Review Notes**  | サンプルレビュー履歴・修正要望                   |
+| 17  | **Fabric Details**                     | 生地の構成、厚み、伸縮性、透け感など                |
+| 18  | **Testing Requirements**               | 色落ち、耐久性、耐洗濯性などの試験内容               |
+| 19  | **Costing Sheet**                      | 原価・材料費・縫製費・ロジ費など（任意）              |
+| 20  | **Revision Log / Version Control**     | バージョン管理と変更履歴の記録欄                  |
