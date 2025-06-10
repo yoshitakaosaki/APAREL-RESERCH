@@ -264,6 +264,10 @@ from core.database import get_db
 from .message import AgentMessage, MessageType
 from .exceptions import AgentError
 
+# 既存認証基盤のインポート
+from authentication.jwt_validator import JWTValidator
+from utils.errors import APIError, ErrorCode
+
 
 class AgentStatus(BaseModel):
     """エージェントステータス"""
@@ -274,15 +278,22 @@ class AgentStatus(BaseModel):
     queue_size: int = 0
     metrics: Dict[str, Any] = {}
     last_heartbeat: datetime
+    user_context: Optional[Dict[str, Any]] = None  # ユーザー認証情報
 
 
 class BaseAgent(ABC):
-    """全エージェントの基底クラス"""
+    """全エージェントの基底クラス（認証基盤統合）"""
     
     def __init__(self, agent_id: str, config: Dict[str, Any]):
         self.agent_id = agent_id
         self.config = config
         self.logger = structlog.get_logger().bind(agent_id=agent_id)
+        
+        # JWT検証器の初期化
+        self.jwt_validator = JWTValidator(
+            jwks_endpoint=settings.JWKS_ENDPOINT,
+            cache_ttl=3600
+        )
         self.status = AgentStatus(
             agent_id=agent_id,
             agent_type=self.__class__.__name__,
@@ -1580,15 +1591,25 @@ class Settings(BaseSettings):
 settings = Settings()
 ```
 
-## 9. 使用例
+## 9. 使用例（認証基盤統合）
 
-### 9.1 用語収集タスクの実行
+### 9.1 認証付き用語収集タスクの実行
 
 ```python
-# 用語収集タスクの作成
+# 用語収集タスクの作成（認証付き）
 import httpx
+from datetime import datetime
+
+# BFF-Web経由でアクセストークンを取得済みと仮定
+access_token = "eyJhbGciOiJSUzI1NiIs..."
 
 api_url = "http://localhost:8000/api/v1/ai/tasks"
+
+# 認証ヘッダー付きリクエスト
+headers = {
+    "Authorization": f"Bearer {access_token}",
+    "Content-Type": "application/json"
+}
 
 task_data = {
     "agent_type": "term_collector",
@@ -1607,11 +1628,20 @@ task_data = {
     }
 }
 
-response = httpx.post(api_url, json=task_data)
-task_id = response.json()["data"]["task_id"]
+# 認証付きリクエスト送信
+response = httpx.post(api_url, json=task_data, headers=headers)
 
-# タスク状態の確認
-status_response = httpx.get(f"{api_url}/{task_id}")
+# スコープ不足の場合
+if response.status_code == 403:
+    print("エラー: 'terms:extract' スコープが必要です")
+elif response.status_code == 401:
+    print("エラー: トークンが無効または期限切れです")
+elif response.status_code == 200:
+    task_id = response.json()["data"]["task_id"]
+    print(f"タスク作成成功: {task_id}")
+
+# タスク状態の確認（認証付き）
+status_response = httpx.get(f"{api_url}/{task_id}", headers=headers)
 print(status_response.json())
 ```
 

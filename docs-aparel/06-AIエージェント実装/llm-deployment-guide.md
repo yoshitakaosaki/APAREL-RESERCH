@@ -295,7 +295,7 @@ def optimize_model_with_tensorrt(model_path: str, output_path: str):
         f.write(engine.serialize())
 ```
 
-### 2.3 API統合レイヤー
+### 2.3 API統合レイヤー（既存認証基盤対応）
 
 ```python
 # llm_gateway.py
@@ -307,9 +307,14 @@ import time
 from collections import defaultdict
 import redis
 import pickle
+import httpx
+
+# 既存認証基盤のインポート
+from authentication.jwt_validator import JWTValidator
+from utils.errors import APIError, ErrorCode
 
 class LLMGateway:
-    """統一的なLLMアクセスインターフェース"""
+    """統一的なLLMアクセスインターフェース（認証基盤統合）"""
     
     def __init__(self, config: Dict[str, Any]):
         self.config = config
@@ -320,6 +325,12 @@ class LLMGateway:
         )
         self.rate_limiters = defaultdict(RateLimiter)
         self.circuit_breakers = defaultdict(CircuitBreaker)
+        
+        # JWT検証器の初期化
+        self.jwt_validator = JWTValidator(
+            jwks_endpoint=config['jwks_endpoint'],
+            cache_ttl=3600
+        )
         
     async def generate(
         self,
@@ -996,24 +1007,108 @@ class LLMTroubleshooter:
         return False
 ```
 
-## 7. セキュリティ考慮事項
+## 7. セキュリティ考慮事項（既存認証基盤統合）
 
-### 7.1 APIキー管理
+### 7.1 認証・認可の統合
 
 ```python
-# secure_key_manager.py
-from cryptography.fernet import Fernet
-import os
-from typing import Dict, Optional
-import json
+# ai_agent_auth.py
+from fastapi import Depends, HTTPException, Security
+from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
+from authentication.jwt_validator import JWTValidator
+from authentication.permissions import HasScope
+from utils.errors import APIError, ErrorCode
 
-class SecureKeyManager:
-    """APIキーの安全な管理"""
+# HTTPベアラー認証スキーム
+security = HTTPBearer()
+
+class AIAgentAuth:
+    """AIエージェント用認証・認可（既存基盤利用）"""
     
-    def __init__(self, key_file: str = ".keys.enc"):
-        self.key_file = key_file
-        self.master_key = self._get_or_create_master_key()
-        self.cipher = Fernet(self.master_key)
+    def __init__(self):
+        self.jwt_validator = JWTValidator(
+            jwks_endpoint=settings.JWKS_ENDPOINT,
+            cache_ttl=3600
+        )
+    
+    async def verify_token(
+        self, 
+        credentials: HTTPAuthorizationCredentials = Security(security)
+    ) -> Dict[str, Any]:
+        """JWTトークン検証"""
+        try:
+            # 既存の検証ロジックを使用
+            payload = await self.jwt_validator.validate_token(
+                credentials.credentials
+            )
+            return payload
+        except Exception as e:
+            raise HTTPException(
+                status_code=401,
+                detail="Invalid authentication credentials",
+                headers={"WWW-Authenticate": "Bearer"},
+            )
+    
+    def require_scopes(self, required_scopes: List[str]):
+        """スコープベースの認可"""
+        async def verify_scopes(
+            token_payload: Dict = Depends(self.verify_token)
+        ):
+            user_scopes = token_payload.get('scope', '').split()
+            
+            for scope in required_scopes:
+                if scope not in user_scopes:
+                    raise APIError(
+                        error_code=ErrorCode.PERMISSION_DENIED,
+                        message=f"Required scope '{scope}' not found"
+                    )
+            
+            return token_payload
+        
+        return verify_scopes
+
+# 使用例
+auth = AIAgentAuth()
+
+@app.post("/api/v1/ai/tasks/generate-techpack")
+async def generate_techpack(
+    request: TechPackRequest,
+    auth_payload: Dict = Depends(auth.require_scopes(['techpack:generate']))
+):
+    user_id = auth_payload['sub']
+    # 認証されたユーザーコンテキストでタスク処理
+    return await process_techpack_generation(request, user_id)
+```
+
+### 7.2 サービス間通信の認証
+
+```python
+# service_auth.py
+class ServiceToServiceAuth:
+    """サービス間通信用認証"""
+    
+    def __init__(self):
+        self.service_tokens = {}
+        self._init_service_tokens()
+    
+    def _init_service_tokens(self):
+        """サービストークンの初期化"""
+        # 各AIエージェント用のサービストークンを生成
+        services = {
+            'term_collector': ['terms:extract', 'terms:manage'],
+            'svg_generator': ['svg:generate', 'storage:write'],
+            'orchestrator': ['agent:execute', 'agent:admin']
+        }
+        
+        for service, scopes in services.items():
+            self.service_tokens[service] = self._create_service_token(
+                service_name=service,
+                scopes=scopes
+            )
+    
+    def get_service_token(self, service_name: str) -> str:
+        """サービストークン取得"""
+        return self.service_tokens.get(service_name)
         
     def _get_or_create_master_key(self) -> bytes:
         """マスターキーの取得または生成"""
